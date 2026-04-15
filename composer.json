@@ -1,0 +1,20 @@
+{
+  "name": "vendor_name/laravel-google-informal-icu-i18n-translate",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "EugeneErg\\LaravelGoogleInformalIcuI18nTranslate\\": "src/"
+    }
+  },
+  "require": {
+    "eugene-erg/google-informal-icu-i18n-translate": "^1.0",
+    "eugene-erg/laravel-icu-i18n-translate": "^1.0"
+  },
+  "laravel": {
+    "providers": [
+      "EugeneErg\\LaravelGoogleInformalIcuI18nTranslate\\Providers\\ServiceProvider"
+    ]
+  }
+}
