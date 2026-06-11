@@ -1,0 +1,54 @@
+# https://phpstan.org
+includes:
+  # Включение самых свежих и строгих правил, которые еще не вошли в основной релиз
+  - phar://phpstan.phar/conf/bleedingEdge.neon
+
+  # Подключение популярных расширений (раскомментируйте нужные после их установки)
+  # - vendor/phpstan/phpstan-strict-rules/rules.neon
+  # - vendor/phpstan/phpstan-phpunit/extension.neon
+  # - vendor/phpstan/phpstan-symfony/extension.neon
+  # - vendor/phpstan/phpstan-doctrine/extension.neon
+  - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+  # Максимальный уровень строгости (0-9)
+  level: max
+
+  # Пути для анализа
+  paths:
+    - src
+    - tests
+
+  # Пути для исключения из анализа
+  excludePaths:
+    - vendor/*
+
+  # МАКСИМАЛЬНАЯ СТРОГОСТЬ: Включение всех возможных проверок
+  checkClassCaseSensitivity: true
+  #checkFunctionCaseSensitivity: true
+  checkArgumentsPassedByReference: true
+  checkMaybeUndefinedVariables: true
+  #checkImplicitWildcards: true
+  checkTooWideReturnTypesInProtectedAndPublicMethods: true
+  #checkMissingIterableValueType: true
+  checkMissingCallableSignature: true
+  #checkGenericClassInNonGenericObjectType: true
+  checkMissingVarTagTypehint: true
+  checkMissingTypehints: true
+  checkUninitializedProperties: true
+  checkDynamicProperties: true
+
+  # Логические и синтаксические проверки
+  #checkAlwaysTrueCheckTypeFunctionCall: true
+  #checkAlwaysTrueInstanceof: true
+  #checkAlwaysTrueNullCoalesce: true
+  checkExplicitMixed: true
+
+  # Дополнительный строгий контроль типов
+  rememberPossiblyImpureFunctionValues: false
+  reportMagicMethods: true
+  reportMagicProperties: true
+  reportStaticMethodSignatures: true
+  reportWrongPhpDocTypeInVarTag: true
+  bootstrapFiles:
+    - vendor/orchestra/testbench-core/laravel/bootstrap/app.php
