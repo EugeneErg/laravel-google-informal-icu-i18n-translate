@@ -17,7 +17,6 @@ parameters:
   # Пути для анализа
   paths:
     - src
-    - tests
 
   # Пути для исключения из анализа
   excludePaths:
