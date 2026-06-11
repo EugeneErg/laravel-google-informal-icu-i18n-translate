@@ -1,17 +1,15 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace EugeneErg\LaravelGoogleInformalIcuI18nTranslate\Providers;
 
 use EugeneErg\GoogleInformalIcuI18nTranslator\Client\PsrClient;
 use EugeneErg\GoogleInformalIcuI18nTranslator\GoogleInformalTranslator;
+use EugeneErg\IcuI18nTranslator\TranslatorInterface;
 use EugeneErg\ICUMessageFormatParser\Parser;
-use EugeneErg\IcuI18nTranslator\Translators\Contracts\TranslatorInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
-use Http\Factory\Guzzle\RequestFactory;
-use Http\Factory\Guzzle\StreamFactory;
 use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
@@ -25,21 +23,21 @@ final class ServiceProvider extends BaseServiceProvider
 {
     public function register(): void
     {
-        $this->app->bindIf(ClientInterface::class, function () {
+        $this->app->bindIf(ClientInterface::class, static function () {
             if (class_exists(Client::class)) {
                 return new Client();
             }
 
             throw new RuntimeException('No PSR-18 client found. Please install guzzlehttp/guzzle or bind ClientInterface.');
         });
-        $this->app->bindIf(RequestFactoryInterface::class, function () {
+        $this->app->bindIf(RequestFactoryInterface::class, static function () {
             if (class_exists(HttpFactory::class)) {
                 return new HttpFactory();
             }
 
             throw new RuntimeException('No PSR-18 client found. Please install guzzlehttp/guzzle or bind RequestFactoryInterface.');
         });
-        $this->app->bindIf(StreamFactoryInterface::class, function () {
+        $this->app->bindIf(StreamFactoryInterface::class, static function () {
             if (class_exists(HttpFactory::class)) {
                 return new HttpFactory();
             }
@@ -55,6 +53,9 @@ final class ServiceProvider extends BaseServiceProvider
         });
 
         $this->app->extend(TranslatorInterface::class . '[]', function (array $result): array {
+            /** @var string $apiUrl */
+            $apiUrl = Config::get('GOOGLE_ICU_I18N_TRANSLATE_API_URL', 'https://translate.googleapis.com');
+
             $result[] = new GoogleInformalTranslator(
                 client: new \EugeneErg\GoogleInformalIcuI18nTranslator\Client\Client(
                     psrClient: new PsrClient(
@@ -62,7 +63,7 @@ final class ServiceProvider extends BaseServiceProvider
                         requestFactory: $this->app->make(RequestFactoryInterface::class),
                         streamFactory: $this->app->make(StreamFactoryInterface::class),
                     ),
-                    apiUrl: Config::get('GOOGLE_ICU_I18N_TRANSLATE_API_URL', 'https://translate.googleapis.com'),
+                    apiUrl: $apiUrl,
                 ),
                 parser: $this->app->make(Parser::class),
                 cache: $this->app->make(CacheInterface::class),
